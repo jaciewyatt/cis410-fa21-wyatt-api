@@ -35,3 +35,27 @@ app.get("/webinars", (req, res) => {
       res.status(500).send();
     });
 });
+
+app.get("/webinars/:pk", (req, res) => {
+  let pk = req.params.pk;
+  // console.log(pk);
+  let myQuery = `SELECT * 
+  FROM Webinar
+  LEFT JOIN Category
+  ON Category.CategoryPK = Webinar.CategoryFk
+  WHERE webinarpk = ${pk}`;
+
+  db.executeQuery(myQuery)
+    .then((result) => {
+      // console.log("result", result);
+      if (result[0]) {
+        res.send(result[0]);
+      } else {
+        res.status(404).send(`bad request`);
+      }
+    })
+    .catch((err) => {
+      console.log("Error in /webinars/:pk", err);
+      res.status(500).send();
+    });
+});
