@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/b219227d-ad15-4b38-b50d-73d51d0d5c23/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/cis410-fa21-wyatt-api",
+  "appService.deploySubpath": "."
+}

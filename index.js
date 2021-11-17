@@ -1,21 +1,21 @@
 const express = require("express");
-
+const cors = require("cors");
 const bcrypt = require("bcryptjs");
-
 const jwt = require("jsonwebtoken");
 
 const db = require("./dbConnectExec.js");
-
 const wyattConfig = require("./config.js");
-
 const auth = require("./middleware/authenticate");
 
 const app = express();
-
 app.use(express.json());
+//azurewebsite.net, colostate.edu
 
-app.listen(5000, () => {
-  console.log("app is running on port 5000");
+app.use(cors());
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`app is running on port ${PORT}`);
 });
 
 app.get("/hi", (req, res) => {
