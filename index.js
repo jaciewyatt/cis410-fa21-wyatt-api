@@ -8,6 +8,8 @@ const db = require("./dbConnectExec.js");
 
 const wyattConfig = require("./config.js");
 
+const auth = require("./middleware/authenticate");
+
 const app = express();
 
 app.use(express.json());
@@ -26,6 +28,38 @@ app.get("/", (req, res) => {
 
 // app.post()
 // app.put()
+
+app.post("/signup", auth, async (req, res) => {
+  try {
+    let webinarFK = req.body.WebinarFK;
+    // let categoryFK = req.body.CategoryFK;
+
+    if (!webinarFK) {
+      // return res.status(400).send("bad request");
+    }
+    webinarFK = webinarFK.replace("'", "''");
+    // console.log("here is the contact", req.contact);
+
+    let insertQuery = `INSERT INTO SignUp(WebinarFK, ContactFK)
+    OUTPUT inserted.WebinarFK, inserted.ContactFK
+    VALUES('${webinarFK}'', '${req.contact.ContactPK}'')`;
+
+    let insertedSignUp = await db.executeQuery(insertQuery);
+
+    console.log("inserted sign up", insertedSignUp);
+
+    // res.send("here is the response");
+
+    res.status(201).send(insertedSignUp[0]);
+  } catch (err) {
+    console.log("error in POST /signup", err);
+    res.status(500).send();
+  }
+});
+
+app.get("/contacts/me", auth, (req, res) => {
+  res.send(req.contact);
+});
 
 app.post("/contacts/login", async (req, res) => {
   // console.log("/contacts/login called", req.body);
