@@ -29,6 +29,27 @@ app.get("/", (req, res) => {
 // app.post()
 // app.put()
 
+app.post("/contacts/logout", auth, (req, res) => {
+  let query = `UPDATE Contact
+SET token = NULL
+WHERE ContactPK = ${req.contact.ContactPK}`;
+
+  db.executeQuery(query)
+    .then(() => {
+      res.status(200).send();
+    })
+    .catch((err) => {
+      console.log("error in POST /contacts/logout", err);
+      res.status(500).send();
+    });
+});
+
+app.get("/signup/me", auth, async (req, res) => {
+  //1. get the ContactPK
+  //2. query database for users records
+  //3. send users reviews back to them
+});
+
 app.post("/signup", auth, async (req, res) => {
   try {
     let webinarFK = req.body.WebinarFK;
