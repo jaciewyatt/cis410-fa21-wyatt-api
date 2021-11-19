@@ -46,24 +46,34 @@ WHERE ContactPK = ${req.contact.ContactPK}`;
 
 app.get("/signup/me", auth, async (req, res) => {
   //1. get the ContactPK
+  let contactPK = req.contact.ContactPK;
+
   //2. query database for users records
-  //3. send users reviews back to them
+  let insertQuery = `SELECT *
+FROM SignUp
+WHERE ContactFK = '${req.contact.ContactFK}';`;
+
+  let signUpRecords = await db.executeQuery(insertQuery);
+  console.log("sign up records", signUpRecords);
+
+  //3. send users signups back to them
+  res.status(201).send(signUpRecords);
 });
 
 app.post("/signup", auth, async (req, res) => {
   try {
     let webinarFK = req.body.WebinarFK;
-    // let categoryFK = req.body.CategoryFK;
+    // let signUpDate = req.body.SignUpDate;
 
     if (!webinarFK) {
       // return res.status(400).send("bad request");
     }
-    webinarFK = webinarFK.replace("'", "''");
+    // webinarFK = webinarFK.replace("'", "''");
     // console.log("here is the contact", req.contact);
 
-    let insertQuery = `INSERT INTO SignUp(WebinarFK, ContactFK)
-    OUTPUT inserted.WebinarFK, inserted.ContactFK
-    VALUES('${webinarFK}'', '${req.contact.ContactPK}'')`;
+    let insertQuery = `INSERT INTO SignUp(WebinarFK, SignUpDate, ContactFK)
+    OUTPUT inserted.WebinarFK, inserted.SignUpDate, inserted.ContactFK
+    VALUES('${webinarFK}'', '${req.contact.ContactFK}'')`;
 
     let insertedSignUp = await db.executeQuery(insertQuery);
 
